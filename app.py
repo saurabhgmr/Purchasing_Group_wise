@@ -72,7 +72,7 @@ def get_all_purchasing_groups():
 
     try:
         cursor = conn.cursor(cursor_factory=RealDictCursor)
-        query = "SELECT DISTINCT purchasing_group FROM puchasing_groupwise_materialids_warora"
+        query = "SELECT DISTINCT purchasing_group FROM purchasing_groupwise_materialids_warora"
         cursor.execute(query)
         results = cursor.fetchall()
 
@@ -105,7 +105,7 @@ def get_purchasing_group_data():
 
         query = """
             SELECT purchasing_group, material_id
-            FROM puchasing_groupwise_materialids_warora 
+            FROM purchasing_groupwise_materialids_warora 
             WHERE purchasing_group = ANY(%s)
         """
         cursor = conn.cursor(cursor_factory=RealDictCursor)
