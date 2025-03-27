@@ -51,7 +51,7 @@ def get_all_purchasing_groups():
         return jsonify({"purchasing_groups": purchasing_group}), 200
     except Exception as e:
         print("Error while fetching materials:", e)
-        return jsonify({"error": "An error occurred while fetching 'Purchasing Groups'"}), 500
+        return jsonify({"error": e}), 500
     finally:
         cursor.close()
         conn.close()
