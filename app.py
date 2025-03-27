@@ -77,9 +77,12 @@ def get_all_purchasing_groups():
         results = cursor.fetchall()
 
         if not results:
-            return jsonify({"error": "No materials found"}), 404
+            return jsonify({"error": "No purchasing groups found"}), 404
 
-        purchasing_groupt = [{"purchasing_group": row["purchasing_group"]} for row in results]
+        purchasing_groupt = [
+            {"purchasing_group": row["purchasing_group"]} 
+            for row in results
+            ]
         return jsonify({"purchasing_groups": purchasing_groupt}), 200
     except Exception as e:
         print("Error while fetching materials:", e)
