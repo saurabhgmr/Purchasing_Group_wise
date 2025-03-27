@@ -31,6 +31,38 @@ def get_db_connection():
         print("Database connection error:", e)
         return None
 
+# Route to fetch all material IDs
+@app.route("/materials", methods=["GET"])
+def get_all_materials():
+    # Connect to the database
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"error": "Unable to connect to the database"}), 500
+
+    try:
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        
+        # Query to fetch distinct material IDs and descriptions
+        query = "SELECT DISTINCT material_id, material_description FROM material_data"
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        if not results:
+            return jsonify({"error": "No materials found"}), 404
+        
+        # Prepare the response as key-value pairs
+        materials = [
+            {"material_id": row["material_id"], "material_description": row["material_description"]}
+            for row in results
+        ]
+        return jsonify({"materials": materials}), 200
+    except Exception as e:
+        print("Error while fetching materials:", e)
+        return jsonify({"error": "An error occurred while fetching materials"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+        
 # Route to fetch all purchasing_groups
 @app.route("/purchasing_group", methods=["GET"])
 def get_all_purchasing_groups():
