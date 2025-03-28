@@ -84,7 +84,7 @@ def get_all_purchasing_groups():
         purchasing_group = [{"purchasing_group": row["purchasing_group"]} for row in results]
         
         return jsonify({"purchasing_group": purchasing_group}), 200
-
+#hello
     except Exception as e:
         print("Error while fetching purchasing groups:", e) # Updated message
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500 # More detailed error response
