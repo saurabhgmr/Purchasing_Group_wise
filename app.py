@@ -31,6 +31,37 @@ def get_db_connection():
         print("Database connection error:", e)
         return None
 
+#...
+@app.route("/purchasing_group", methods=["GET"])
+def get_all_purchasing_groups():
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"error": "Unable to connect to the database"}), 500
+
+    try:
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        
+        query = "SELECT DISTINCT purchasing_group FROM purchasing_groupwise_materialids_warora"
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        if not results:
+            return jsonify({"error": "No purchasing groups found"}), 404
+
+        # Convert list of dictionaries to a simple list of values
+        purchasing_groups = [row["purchasing_group"] for row in results]
+        
+        return jsonify({"purchasing_groups": purchasing_groups}), 200
+
+    except Exception as e:
+        print("Error while fetching purchasing groups:", e) # Log actual error
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+#...
 
 # Route to fetch all purchasing_groups
 @app.route("/purchasing_group", methods=["GET"])
@@ -49,7 +80,9 @@ def get_all_purchasing_groups():
         if not results:
             return jsonify({"error": "No purchasing groups found"}), 404
 
-        purchasing_group = [{"purchasing_group": row["purchasing_group"]} for row in results]
+        #purchasing_group = [{"purchasing_group": row["purchasing_group"]} for row in results]
+        # Convert list of dictionaries to a simple list of values
+        purchasing_group = [row["purchasing_group"] for row in results]
         
         return jsonify({"purchasing_group": purchasing_group}), 200
 
