@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Environment variables for database credentials
-DB_NAME = os.getenv("DB_NAME", "material_db")
+DB_NAME = os.getenv("DB_NAME", "postgres")
 DB_USER = os.getenv("DB_USER", "replicator")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "Ant-admin@123")
 DB_HOST = os.getenv("DB_HOST", "34.100.200.180")
