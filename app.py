@@ -76,7 +76,7 @@ def get_all_purchasing_groups():
         query = "SELECT DISTINCT Purchasing_Group FROM Purchasing_Groupwise_MaterialIDs_Warora"
         cursor.execute(query)
         results = cursor.fetchall()
-        #hello
+        
 
         if not results:
             return jsonify({"error": "No purchasing groups found"}), 404
