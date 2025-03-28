@@ -73,7 +73,7 @@ def get_all_purchasing_groups():
     try:
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         
-        query = "SELECT DISTINCT Purchasing_Group FROM Purchasing_Groupwise_MaterialIDs_Warora"
+        query = "SELECT DISTINCT purchasing_group FROM purchasing_group_warora"
         cursor.execute(query)
         results = cursor.fetchall()
         
@@ -81,9 +81,9 @@ def get_all_purchasing_groups():
         if not results:
             return jsonify({"error": "No purchasing groups found"}), 404
 
-        purchasing_groups = [{"Purchasing_Group": row["Purchasing_Group"]} for row in results]
+        purchasing_groups = [{"purchasing_group": row["purchasing_group"]} for row in results]
         
-        return jsonify({"Purchasing_groups": Purchasing_groups}), 200
+        return jsonify({"purchasing_groups": purchasing_groups}), 200
 
     except Exception as e:
         print("Error while fetching purchasing groups:", e) # Updated message
