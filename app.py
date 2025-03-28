@@ -46,7 +46,6 @@ def get_all_purchasing_groups():
         cursor.execute(query)
         results = cursor.fetchall()
         
-
         if not results:
             return jsonify({"error": "No purchasing groups found"}), 404
 
