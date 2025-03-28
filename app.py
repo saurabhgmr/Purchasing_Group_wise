@@ -81,9 +81,9 @@ def get_all_purchasing_groups():
         if not results:
             return jsonify({"error": "No purchasing groups found"}), 404
 
-        purchasing_groups = [{"purchasing_group": row["purchasing_group"]} for row in results]
+        purchasing_groups = [{"Purchasing_Group": row["Purchasing_Group"]} for row in results]
         
-        return jsonify({"purchasing_groups": purchasing_groups}), 200
+        return jsonify({"Purchasing_groups": Purchasing_groups}), 200
 
     except Exception as e:
         print("Error while fetching purchasing groups:", e) # Updated message
@@ -110,9 +110,9 @@ def get_purchasing_group_data():
         purchasing_groups_list = purchasing_groups.split(",")[:4]
 
         query = """
-            SELECT purchasing_group, material_id
-            FROM purchasing_groupwise_materialids_warora 
-            WHERE purchasing_group = ANY(%s)
+            SELECT Purchasing_Group, Material_ID
+            FROM Purchasing_Groupwise_MaterialIDs_Warora 
+            WHERE Purchasing_Group = ANY(%s)
         """
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute(query, (purchasing_groups_list,))
