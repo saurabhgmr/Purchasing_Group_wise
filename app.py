@@ -80,8 +80,8 @@ def get_purchasing_group_data():
         query = """
             SELECT purchasing_group, material_id
             FROM purchasing_group_warora 
-            WHERE purchasing_group = ANY(%s)
         """
+        #WHERE purchasing_group = ANY(%s)
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute(query, (purchasing_groups_list,))
         results = cursor.fetchall()
