@@ -62,38 +62,6 @@ def get_all_purchasing_groups():
         if conn:
             conn.close()
 
-# Route to fetch all material IDs
-@app.route("/materials", methods=["GET"])
-def get_all_materials():
-    # Connect to the database
-    conn = get_db_connection()
-    if conn is None:
-        return jsonify({"error": "Unable to connect to the database"}), 500
-
-    try:
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
-        
-        # Query to fetch distinct material IDs and descriptions
-        query = "SELECT DISTINCT material_id, material_description FROM material_data"
-        cursor.execute(query)
-        results = cursor.fetchall()
-
-        if not results:
-            return jsonify({"error": "No materials found"}), 404
-        
-        # Prepare the response as key-value pairs
-        materials = [
-            {"material_id": row["material_id"], "material_description": row["material_description"]}
-            for row in results
-        ]
-        return jsonify({"materials": materials}), 200
-    except Exception as e:
-        print("Error while fetching materials:", e)
-        return jsonify({"error": "An error occurred while fetching materials"}), 500
-    finally:
-        cursor.close()
-        conn.close()
-
 # Route to fetch data for a selected purchasing_group
 @app.route("/purchasing_group/data", methods=["GET"])
 def get_purchasing_group_data():
@@ -110,9 +78,9 @@ def get_purchasing_group_data():
         purchasing_groups_list = purchasing_groups.split(",")[:4]
 
         query = """
-            SELECT Purchasing_Group, Material_ID
-            FROM Purchasing_Groupwise_MaterialIDs_Warora 
-            WHERE Purchasing_Group = ANY(%s)
+            SELECT purchasing_group, material_id
+            FROM purchasing_group_warora 
+            WHERE purchasing_group = ANY(%s)
         """
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute(query, (purchasing_groups_list,))
