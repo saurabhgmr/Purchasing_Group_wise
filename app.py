@@ -121,8 +121,6 @@ def get_purchasing_group_data():
         # Split and limit to 4 values
         purchasing_groups_list = purchasing_groups.split(",")[:4]
 
-        # Convert list into a tuple for SQL query
-        purchasing_groups_tuple = tuple(purchasing_groups_list)
 
         # SQL Query (fixing parameter passing)
         query = """
@@ -133,7 +131,7 @@ def get_purchasing_group_data():
         cursor = conn.cursor(cursor_factory=RealDictCursor)
 
         # Corrected Execution: Use a tuple inside a list
-        cursor.execute(query, (purchasing_groups_tuple,))  
+        cursor.execute(query, (purchasing_groups_list,))  
         results = cursor.fetchall()
 
         if not results:
