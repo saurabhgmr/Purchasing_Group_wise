@@ -99,7 +99,8 @@ def get_purchasing_group_data():
         return jsonify({"data": grouped_data}), 200
     except Exception as e:
         print("Error while fetching data:", e)
-        return jsonify({"error": "An error occurred while fetching the data"}), 500
+        #return jsonify({"error": "An error occurred while fetching the data"}), 500
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     finally:
         cursor.close()
         conn.close()
