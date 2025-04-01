@@ -62,6 +62,49 @@ def get_all_purchasing_groups():
         if conn:
             conn.close()
 
+# # Route to fetch data for a selected purchasing_group
+# @app.route("/purchasing_group/data", methods=["GET"])
+# def get_purchasing_group_data():
+#     conn = get_db_connection()
+#     if conn is None:
+#         return jsonify({"error": "Unable to connect to the database"}), 500
+
+#     try:
+#         purchasing_groups = request.args.get("purchasing_groups")
+        
+#         if not purchasing_groups:
+#             return jsonify({"error": "No purchasing groups provided"}), 400
+
+#         purchasing_groups_list = purchasing_groups.split(",")[:4]
+
+#         query = """
+#             SELECT purchasing_group, material_id
+#             FROM purchasing_group_warora 
+#             WHERE purchasing_group = ANY(%s)
+#         """
+#         cursor = conn.cursor(cursor_factory=RealDictCursor)
+#         cursor.execute(query, (purchasing_groups_list,))
+#         results = cursor.fetchall()
+
+#         if not results:
+#             return jsonify({"error": "No data found for given purchasing groups"}), 404
+
+#         grouped_data = {}
+#         for row in results:
+#             pg = row["purchasing_group"]
+#             if pg not in grouped_data:
+#                 grouped_data[pg] = []
+#             grouped_data[pg].append(row["material_id"])
+
+#         return jsonify({"data": grouped_data}), 200
+#     except Exception as e:
+#         print("Error while fetching data:", e)
+#         #return jsonify({"error": "An error occurred while fetching the data"}), 500
+#         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+#     finally:
+#         cursor.close()
+#         conn.close()
+
 # Route to fetch data for a selected purchasing_group
 @app.route("/purchasing_group/data", methods=["GET"])
 def get_purchasing_group_data():
@@ -75,20 +118,28 @@ def get_purchasing_group_data():
         if not purchasing_groups:
             return jsonify({"error": "No purchasing groups provided"}), 400
 
+        # Split and limit to 4 values
         purchasing_groups_list = purchasing_groups.split(",")[:4]
 
+        # Convert list into a tuple for SQL query
+        purchasing_groups_tuple = tuple(purchasing_groups_list)
+
+        # SQL Query (fixing parameter passing)
         query = """
             SELECT purchasing_group, material_id
             FROM purchasing_group_warora 
             WHERE purchasing_group = ANY(%s)
         """
         cursor = conn.cursor(cursor_factory=RealDictCursor)
-        cursor.execute(query, (purchasing_groups_list,))
+
+        # Corrected Execution: Use a tuple inside a list
+        cursor.execute(query, (purchasing_groups_tuple,))  
         results = cursor.fetchall()
 
         if not results:
             return jsonify({"error": "No data found for given purchasing groups"}), 404
 
+        # Processing results into a dictionary format
         grouped_data = {}
         for row in results:
             pg = row["purchasing_group"]
@@ -97,13 +148,16 @@ def get_purchasing_group_data():
             grouped_data[pg].append(row["material_id"])
 
         return jsonify({"data": grouped_data}), 200
+
     except Exception as e:
         print("Error while fetching data:", e)
-        #return jsonify({"error": "An error occurred while fetching the data"}), 500
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
     finally:
-        cursor.close()
+        if 'cursor' in locals():
+            cursor.close()
         conn.close()
+
 
 # Run the Flask app (for Cloud Run)
 if __name__ == "__main__":
